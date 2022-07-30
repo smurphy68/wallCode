@@ -1,5 +1,10 @@
 from flask import Flask, request
 import pandas as pd
+import cv2 as cv
+import os
+
+cwd = os.getcwd()
+server = "127.0.0.1"
 
 app = Flask(__name__)
 
@@ -95,7 +100,7 @@ def theForge():
                 <input type="submit" value="Submit">
             </form>
         <h2>Select Holds!</h2>
-            <img src='.server_pyx\Board.png'>
+            <img src="Board.png" width="500" height="600" />
     </body>
     """
 @app.route('/SubmitRoute', methods=["POST", "GET"])
@@ -108,30 +113,8 @@ def addRoute():
             df = df.append(df1)
             #print(df)
             df.to_csv("TheRecord.csv", encoding="UTF-8")
-        return """
-    <head>
-        <title>Milestone Wall</title>
-    </head>
-    <body>
-        <h1>The Forge</h1>
-            <p><a href="./">Home<a></p>
-            <p><a href="./Routes">the Record<a></p>
-            <p><a href="./Set">the Forge<a></p><div></div>
-        <h2>Set a Route!</h2>
-            <form action="/SubmitRoute">
-                <label for="User">User:</label><br>
-                <input type="text" id="User" name="User" value="Name"><br>
-                <label for="Route Name">Name of Route:</label><br>
-                <input type="text" id="Name" name="Name" value="Route Name"><br>
-                <label for="Route Grade">Grade of Route:</label><br>
-                <input type="text" id="Grade" name="Grade" value="Route Grade"><br>
-                <label for="Number of Attempts">Number of Attempts</label><br>
-                <input type="text" id="Attempts" name="Attempts" value="Number of Attempts"><br><br>
-                <input type="submit" value="Submit">
-            </form>
-            <p>Route added!</p>
-    </body>
-    """
+        return open("website.html")
+
     else:
         return "Route not Added! Experiencing an Error!"
 
@@ -139,6 +122,6 @@ def addRoute():
 #def activateRoute(): 
     
 
-#app.run("127.0.0.1", 5000, debug=True)
+app.run(server, 5000, debug=True)
 
-print('Hello, Simon')
+#print('Hello, Simon')
