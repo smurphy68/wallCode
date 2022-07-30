@@ -139,6 +139,6 @@ def addRoute():
 #def activateRoute(): 
     
 
-app.run("127.0.0.1", 5000, debug=True)
+#app.run("127.0.0.1", 5000, debug=True)
 
-print('hello simon')
+print('Hello, Simon')
