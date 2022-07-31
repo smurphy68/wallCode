@@ -113,7 +113,31 @@ def addRoute():
             df = df.append(df1)
             #print(df)
             df.to_csv("TheRecord.csv", encoding="UTF-8")
-        return open("website.html")
+        return """
+    <head>
+        <title>Milestone Wall</title>
+    </head>
+    <body>
+        <h1>The Forge</h1>
+            <p><a href="./">Home<a></p>
+            <p><a href="./Routes">the Record<a></p>
+            <p><a href="./Set">the Forge<a></p><div></div>
+        <h2>Set a Route!</h2>
+            <form action="/SubmitRoute">
+                <label for="User">User:</label><br>
+                <input type="text" id="User" name="User" value="Name"><br>
+                <label for="Route Name">Name of Route:</label><br>
+                <input type="text" id="Name" name="Name" value="Route Name"><br>
+                <label for="Route Grade">Grade of Route:</label><br>
+                <input type="text" id="Grade" name="Grade" value="Route Grade"><br>
+                <label for="Number of Attempts">Number of Attempts</label><br>
+                <input type="text" id="Attempts" name="Attempts" value="Number of Attempts"><br><br>
+                <input type="submit" value="Submit">
+            </form>
+        <h2>Select Holds!</h2>
+            <img src="Board.png" width="500" height="600" />
+    </body>
+    """
 
     else:
         return "Route not Added! Experiencing an Error!"
