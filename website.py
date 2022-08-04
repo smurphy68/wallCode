@@ -4,7 +4,6 @@ import cv2 as cv
 import os
 
 cwd = os.getcwd()
-server = "127.0.0.1"
 
 app = Flask(__name__)
 
@@ -142,6 +141,7 @@ def addRoute():
     else:
         return "Route not Added! Experiencing an Error!"
 
-app.run(server, 5000, debug=True)
+app.run("0.0.0.0", 5000, debug=True)
+
 
 #print('Hello, Simon')
