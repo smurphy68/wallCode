@@ -142,10 +142,6 @@ def addRoute():
     else:
         return "Route not Added! Experiencing an Error!"
 
-#@app.route('/ActivateRoute', methods=["POST", "GET"])
-#def activateRoute(): 
-    
-
 app.run(server, 5000, debug=True)
 
 #print('Hello, Simon')
