@@ -63,7 +63,7 @@ class Hold():
         for i in range(0, len(opt)):
             if self.state == opt[i]:
                 j = i
-        if j + 1 >= len(opt)-1:
+        if j + 1 > len(opt)-1:
             self.state = opt[0]
         else:
             self.state = opt[j+1]
