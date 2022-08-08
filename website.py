@@ -2,6 +2,7 @@ from flask import Flask, request
 import pandas as pd
 import cv2 as cv
 import os
+import socket
 
 cwd = os.getcwd()
 
@@ -20,6 +21,47 @@ def extractDataframe(vrequest):
             "Grade of Route": temp2[2][1], 
             "Number of Attempts": temp2[3][1].strip("' [GET]>")}])
     return df
+
+def send(msg):
+    message = msg.encode(FORMAT)
+    msg_length = len(message)
+    send_length = str(msg_length).encode(FORMAT)
+    send_length += b' ' * (HEADER - len(send_length))
+    client.send(send_length)
+    client.send(message)
+    print(client.recv(2048).decode(FORMAT))
+
+#class's
+
+class Hold():
+    def __init__(self, name, state="reset"):
+        name = self.name
+        state = self.state
+    
+    def changeState(self, state):
+        opt = ["start", "route", "foot", "end", "reset"]
+        for i in range(0, len(opt)):
+            if opt == state:
+                if i+1 > len(opt):
+                    self.state = opt[0]
+                else:
+                    self.state = opt[i+1]
+        
+        #transmitting
+
+        HEADER = 64
+        PORT = 5050
+        FORMAT = 'utf-8'
+        DISCONNECT_MESSAGE = "!DISCONNECT"
+        SERVER = "192.168.1.60"
+        ADDR = (SERVER, PORT)
+
+        client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        client.connect(ADDR)
+        print("Connected to server")
+
+        send(f"{Hold.name} {Hold.state}")
+                
 
 @app.route('/')
 def homePage():
@@ -141,7 +183,7 @@ def addRoute():
     else:
         return "Route not Added! Experiencing an Error!"
 
-app.run("0.0.0.0", 5000, debug=True)
+#app.run("0.0.0.0", 5000, debug=True)
 
 
 #print('Hello, Simon')
