@@ -1,6 +1,5 @@
-from flask import Flask, request
+from flask import Flask, request, redirect
 import pandas as pd
-import cv2 as cv
 import os
 import socket
 
@@ -38,29 +37,36 @@ def send(msg):
     client.send(send_length)
     client.send(message)
     print(client.recv(2048).decode(FORMAT))
+    
 
 #class's
 
 class Hold():
-    def __init__(self, name, state="reset"):
-        name = self.name
-        state = self.state
+    def __init__(self, name, state="off"):
+        self.name = name
+        self.state = state
     
-    def changeState(self, state):
-        opt = ["start", "route", "foot", "end", "reset"]
+    def changeState(self):
+        j = 0
+        opt = ["start", "route", "foot", "end", "off"]
         for i in range(0, len(opt)):
-            if opt == state:
-                if i+1 > len(opt):
-                    self.state = opt[0]
-                else:
-                    self.state = opt[i+1]
-        
+            if self.state == opt[i]:
+                j = i
+        if j + 1 >= len(opt)-1:
+            self.state = opt[0]
+        else:
+            self.state = opt[j+1]
+      
         #transmitting
               
         client.connect(ADDR)
         print("Connected to server")
-        send(f"{Hold.name} {Hold.state}")
+        send(f"{self.name} {self.state}")
+        send(DISCONNECT_MESSAGE)
                 
+#class variables
+
+hold1 = Hold(name="hold1")
 
 @app.route('/')
 def homePage():
@@ -178,11 +184,24 @@ def addRoute():
             <img src="Board.png" width="500" height="600" />
     </body>
     """
-
     else:
         return "Route not Added! Experiencing an Error!"
 
-#app.run("0.0.0.0", 5000, debug=True)
+#TESTING
+
+@app.route("/onClick")
+def onClick():
+    hold1.changeState()
+    #print(hold1.state)
+    return redirect("/test", 302)
+
+@app.route("/test")
+def test():
+    return f'''
+    <button type="button" onclick="window.location.href='/onClick';">{hold1.state}</button>
+    '''
+
+app.run("0.0.0.0", 5000, debug=True)
 
 
 #print('Hello, Simon')
