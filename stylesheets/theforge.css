@@ -23,3 +23,8 @@
 body {
     background-image: url("C:/Users/smurp/wallCode/templates/background.jpeg");
 }
+
+.reset-button {
+    font-size: 25px;
+    text-align: center;
+}
