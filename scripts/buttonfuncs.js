@@ -66,12 +66,14 @@ buttons.map( button=> {
     })
 })
 
-let resetButton = Array.from(document.getElementsByClassName('reset-button'));
-
-resetButton.map ( button=> {
-    button.addEventListener('click', (e) => {
-        for (let i = 0; i < Holds.length; i++) {
-            console.log(Holds[i]);
-        }
-    })
+let resetButton = document.getElementById("reset");
+resetButton.addEventListener('click', (e) => {
+    console.log("clicked")
+    for (const [key, value] of Object.entries(Holds)) {
+        //console.log(key, value.state)
+        value.state = "off"
+        value.colour = ""
+        //console.log(key, value.state)
+        //break
+    } 
 })
