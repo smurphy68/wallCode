@@ -66,10 +66,12 @@ buttons.map( button=> {
     })
 })
 
-let resetButton = Array.from(document.getElementsByClassName('rest-button'));
+let resetButton = Array.from(document.getElementsByClassName('reset-button'));
 
 resetButton.map ( button=> {
     button.addEventListener('click', (e) => {
-        
+        for (let i = 0; i < Holds.length; i++) {
+            console.log(Holds[i]);
+        }
     })
 })
