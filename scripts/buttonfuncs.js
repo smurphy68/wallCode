@@ -6,7 +6,6 @@ class Hold {
         this.state = state;
         this.colour = colour
     }
-<<<<<<< HEAD
 
     newChangeState() {
         const newStateStateIndex = this.possibleStates.findIndex((item) => item === this.state) + 1;
@@ -16,13 +15,7 @@ class Hold {
             
         }  
 
-        changeState() {
-        //const states = ["start", "route" , "foot", "end", "off"];
-        // this was failing because switch statements check for true values and all strings with a value are truthy
-        // so "start" == true, "route" == true, etc
-=======
     changeState() {
->>>>>>> SM-Testing
         switch (this.state) {
             case (this.state = "off"):
                 //console.log(`[OLD STATE]: ${this.holdID} is ${this.state}.`);
