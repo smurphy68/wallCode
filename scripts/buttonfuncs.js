@@ -5,8 +5,19 @@ class Hold {
         this.holdID = holdID;
         this.state = state;
     }
-    changeState() {
+
+    newChangeState() {
+        const newStateStateIndex = this.possibleStates.findIndex((item) => item === this.state) + 1;
+        this.state = newStateStateIndex < this.possibleStates.length
+            ? this.possibleStates[newStateStateIndex]
+            : this.possibleStates[0];
+            
+        }  
+
+        changeState() {
         //const states = ["start", "route" , "foot", "end", "off"];
+        // this was failing because switch statements check for true values and all strings with a value are truthy
+        // so "start" == true, "route" == true, etc
         switch (this.state) {
             case (this.state = "off"):
                 console.log("[OLD STATE]: " + this.state);
