@@ -1,5 +1,27 @@
 let buttons = Array.from(document.getElementsByClassName('button'));
 
+//formatting parameters for sending messages through socket
+HEADER = 588
+PORT = 5050
+DISCONNECT_MESSAGE = "!DISCONNECT"
+SERVER = "192.168.1.60"
+
+function sendRoute(msg) {
+    fetch(`http://${SERVER}:${PORT}`, {
+        method: "POST",
+        headers: {
+            'content-type': 'application/json',
+            'accept': 'application/json'
+        },
+        mode: 'no-cors',
+        body: JSON.stringify(msg)
+    })
+        .then(jsonResponse=>{
+            console.log(jsonResponse)
+    })        
+        .catch((err) => console.log(err));
+    }
+
 class Hold {
     constructor(holdID, colour="", state="off") {
         this.holdID = holdID;
@@ -7,6 +29,8 @@ class Hold {
         this.colour = colour
     }
 
+
+//to discuss, throws an error, I assume we have to define the list of possible states? I dont understand the lower syntax :D
     newChangeState() {
         const newStateStateIndex = this.possibleStates.findIndex((item) => item === this.state) + 1;
         this.state = newStateStateIndex < this.possibleStates.length
@@ -49,6 +73,12 @@ class Hold {
                 break
         }
     }  
+
+    refreshHolds() {
+        this.state = "off"
+        this.colour = ""
+
+    }
 }
 
 let Holds = []
@@ -68,12 +98,27 @@ buttons.map( button=> {
 
 let resetButton = document.getElementById("reset");
 resetButton.addEventListener('click', (e) => {
-    console.log("clicked")
+    console.log("[RESET]: Reset button clicked.")
     for (const [key, value] of Object.entries(Holds)) {
-        //console.log(key, value.state)
-        value.state = "off"
-        value.colour = ""
-        //console.log(key, value.state)
-        //break
-    } 
+        value.refreshHolds()
+    }
+    for (let i = 0; i < buttons.length; i++) {
+        buttons[i].style.backgroundColor = "";
+        buttons[i].style.opacity = 1.0;
+    }
+})
+
+let displayButton = document.getElementById("submit");
+displayButton.addEventListener('click', (e) => {
+    console.log("[DISPLAY] Route posted to Board.")
+    let message = ""
+    //console.log(Object.keys(Holds).length)
+    for (let i = 0; i < Object.keys(Holds).length; i++) {
+        if (Object.values(Holds)[i].state !== "off") {
+            message = message += `${Object.values(Holds)[i].holdID.toLowerCase().replace(/\s/g, '')} ${Object.values(Holds)[i].state}, `;         
+        }
+    }
+    message = message.substring(0, message.length-2)
+    console.log(message)
+    sendRoute(message)
 })
