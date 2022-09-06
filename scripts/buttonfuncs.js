@@ -87,7 +87,7 @@ for (let i = 0; i < buttons.length; i++) {
 }
 
 for (let i = 0; i < buttons.length; i++) {
-    initialArray[buttons[i].innerHTML] = new Hold(buttons[i].innerHTML);
+    initialArray[buttons[i].innerHTML] = new Hold(buttons[i].innerHTML, state="_");
 }
 
 buttons.map( button=> {
@@ -109,6 +109,9 @@ resetButton.addEventListener('click', (e) => {
         buttons[i].style.backgroundColor = "";
         buttons[i].style.opacity = 1.0;
     }
+    for (const [key, value] of Object.entries(initialArray)) {
+        value.refreshHolds()
+    }
     sendRoute("reset")
 })
 
@@ -126,7 +129,6 @@ displayButton.addEventListener('click', (e) => {
         if (Object.values(Holds)[i].state !== Object.values(initialArray)[i].state) {
             message = message += `${Object.values(Holds)[i].holdID.toLowerCase().replace(/\s/g, '')} ${Object.values(Holds)[i].state}, `;
             Object.values(initialArray)[i].state = Object.values(Holds)[i].state
-            
         }
     }
     console.log("altered array:", Holds)
