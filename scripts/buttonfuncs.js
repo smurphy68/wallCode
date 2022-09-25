@@ -119,11 +119,6 @@ let displayButton = document.getElementById("submit");
 displayButton.addEventListener('click', (e) => {
     console.log("[DISPLAY] Route posted to Board.")
     let message = ""
-//    for (let i = 0; i < Object.keys(Holds).length; i++) {
-//        if (Object.values(Holds)[i].state !== "off") {
-//            message = message += `${Object.values(Holds)[i].holdID.toLowerCase().replace(/\s/g, '')} ${Object.values(Holds)[i].state}, `;         
-//        }
-//    }
     console.log("initial array: ", initialArray)
     for (let i = 0; i <Object.values(Holds).length; i++) {
         if (Object.values(Holds)[i].state !== Object.values(initialArray)[i].state) {
