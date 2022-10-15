@@ -1,10 +1,10 @@
 let buttons = Array.from(document.getElementsByClassName('button'));
 
 //formatting parameters for sending messages through socket
-HEADER = 588
+HEADER = 3000
 PORT = 5050
 DISCONNECT_MESSAGE = "!DISCONNECT"
-SERVER = "192.168.1.60"
+SERVER = "192.168.1.72"
 
 function sendRoute(msg) {
     fetch(`http://${SERVER}:${PORT}`, {
