@@ -1,0 +1,23 @@
+{
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "name": "wallcode",
+  "description": "Package to allow access to the Milestone Wall web API and store from a mobile device and to store and recieve routes.",
+  "version": "1.0.0",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/smurphy68/wallCode.git"
+  },
+  "author": "Simon Murphy",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/smurphy68/wallCode/issues"
+  },
+  "homepage": "https://github.com/smurphy68/wallCode#readme"
+}
