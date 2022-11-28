@@ -16,62 +16,57 @@ function sendRoute(msg) {
         mode: 'no-cors',
         body: JSON.stringify(msg)
     })
-    .then(jsonResponse=>{
-        console.log(jsonResponse)
-    })        
-    .catch((err) => console.log(err));
-    }
+        .then(jsonResponse => {
+            console.log(jsonResponse)
+        })
+        .catch((err) => console.log(err));
+}
 
 class Hold {
-    constructor(holdID, colour="", state="off") {
+    constructor(holdID, colour = "", state = "off") {
         this.holdID = holdID;
         this.state = state;
         this.colour = colour
     }
 
 
-//to discuss, throws an error, I assume we have to define the list of possible states? I dont understand the lower syntax :D
+    //to discuss, throws an error, I assume we have to define the list of possible states? I dont understand the lower syntax :D
     newChangeState() {
         const newStateStateIndex = this.possibleStates.findIndex((item) => item === this.state) + 1;
         this.state = newStateStateIndex < this.possibleStates.length
             ? this.possibleStates[newStateStateIndex]
             : this.possibleStates[0];
-        }  
+    }
 
     changeState() {
         switch (this.state) {
             case (this.state = "off"):
-                //console.log(`[OLD STATE]: ${this.holdID} is ${this.state}.`);
                 this.state = "start";
                 this.colour = "green"
                 console.log(`[NEW STATE]: ${this.holdID} is a ${this.state} hold.`);
                 break
             case (this.state = "start"):
-                //console.log(`[OLD STATE]: ${this.holdID} is a ${this.state} hold.`);
                 this.state = "route";
                 this.colour = "blue"
                 console.log(`[NEW STATE]: ${this.holdID} is a ${this.state} hold.`);
                 break
             case (this.state = "route"):
-                //console.log(`[OLD STATE]: ${this.holdID} is a ${this.state} hold.`);
                 this.state = "foot";
                 this.colour = "aqua"
                 console.log(`[NEW STATE]: ${this.holdID} is a ${this.state} hold.`);
                 break
             case (this.state = "foot"):
-                //console.log(`[OLD STATE]: ${this.holdID} is a ${this.state} hold.`);
                 this.state = "end";
                 this.colour = "red"
                 console.log(`[NEW STATE]: ${this.holdID} is a ${this.state} hold.`);
                 break
             case (this.state = "end"):
-                //console.log(`[OLD STATE]: ${this.holdID} is a ${this.state} hold.`);
                 this.state = "off";
                 this.colour = ""
                 console.log(`[NEW STATE]: ${this.holdID} is ${this.state}.`);
                 break
         }
-    }  
+    }
 
     refreshHolds() {
         this.state = "off"
@@ -87,10 +82,10 @@ for (let i = 0; i < buttons.length; i++) {
 }
 
 for (let i = 0; i < buttons.length; i++) {
-    initialArray[buttons[i].innerHTML] = new Hold(buttons[i].innerHTML, state="_");
+    initialArray[buttons[i].innerHTML] = new Hold(buttons[i].innerHTML, state = "_");
 }
 
-buttons.map( button=> {
+buttons.map(button => {
     button.addEventListener('click', (e) => {
         let hold = Holds[e.target.innerHTML];
         hold.changeState();
@@ -117,17 +112,53 @@ resetButton.addEventListener('click', (e) => {
 
 let displayButton = document.getElementById("submit");
 displayButton.addEventListener('click', (e) => {
-    console.log("[DISPLAY] Route posted to Board.")
     let message = ""
-    console.log("initial array: ", initialArray)
-    for (let i = 0; i <Object.values(Holds).length; i++) {
+    for (let i = 0; i < Object.values(Holds).length; i++) {
         if (Object.values(Holds)[i].state !== Object.values(initialArray)[i].state) {
             message = message += `${Object.values(Holds)[i].holdID.toLowerCase().replace(/\s/g, '')} ${Object.values(Holds)[i].state}, `;
             Object.values(initialArray)[i].state = Object.values(Holds)[i].state
         }
     }
-    console.log("altered array:", Holds)
-    message = message.substring(0, message.length-2)
-    console.log(message)
+    //console.log("altered array:", Holds)
+    message = message.substring(0, message.length - 2)
     sendRoute(message)
 })
+
+let uploadButton = document.getElementById("upload");
+uploadButton.addEventListener('click', (e) => {
+    e.preventDefault()
+    console.log("[UPLOAD] Route posted to Database.");
+    upload()
+})
+
+function upload() {
+    let dbHolds = []
+
+    for (let i = 0; i < Holds.length; i++) {
+
+        let holdID = Holds[i].holdID
+        let holdState = Holds["Hold 2"].state
+
+        dbHolds.push([holdID, holdState])
+    }
+
+    console.log(Holds.length)
+
+    options = {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            'Holds': dbHolds,
+            'Details': {
+                routename: document.getElementById("routeform")[0].value,
+                setter: document.getElementById("routeform")[1].value,
+                grade: document.getElementById("routeform")[2].value,
+                attempts: document.getElementById("routeform")[3].value,
+            }
+        })
+    }
+
+    toDB = fetch('/db', options)
+}
