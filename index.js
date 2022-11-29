@@ -16,10 +16,7 @@ app.post("/db", (request, response) => {
     //console.log(request.body)
     route = request.body.holds.Holds
     details = request.body.details
-    console.log({
-        "details": details,
-        "route": route
-    })
+    
     database.insert({
         "details": details,
         "route": route
