@@ -1,3 +1,4 @@
+// Google said it should be asynchronous. Im only loosley aware of what that means
 async function getData(search=null) {
     options = {
         method: "POST",
@@ -7,10 +8,10 @@ async function getData(search=null) {
         body: JSON.stringify({search})
     };
 
-    await fetch('/lr', options).then((response) => {
-        res = response.body
-        console.log(JSON.stringify(res))
+    await fetch('/sendRoute', options).then((response) => {
+        console.log(response)
     })
 };
 
+//Test call to get array in browser
 getData("Test")
