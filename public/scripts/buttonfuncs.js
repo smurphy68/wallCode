@@ -74,7 +74,7 @@ class Hold {
     }
 }
 
-let Holds = []
+var Holds = []
 let initialArray = []
 
 for (let i = 0; i < buttons.length; i++) {
@@ -132,17 +132,13 @@ uploadButton.addEventListener('click', (e) => {
 })
 
 function upload() {
-    let dbHolds = []
-
-    for (let i = 0; i < Holds.length; i++) {
-
-        let holdID = Holds[i].holdID
-        let holdState = Holds["Hold 2"].state
-
-        dbHolds.push([holdID, holdState])
+    dbHolds = []
+    for (let i=0; i<42; i++) {
+        hold = Holds[`Hold ${i}`]
+        // state = hold["state"]
+        // dbHolds.push([hold, state])
+        dbHolds.push(hold)
     }
-
-    console.log(Holds.length)
 
     options = {
         method: "POST",
@@ -150,7 +146,7 @@ function upload() {
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
-            'Holds': dbHolds,
+            'Holds': {dbHolds},
             'Details': {
                 routename: document.getElementById("routeform")[0].value,
                 setter: document.getElementById("routeform")[1].value,
