@@ -17,7 +17,7 @@ function sendRoute(msg) {
         mode: 'no-cors',
         body: JSON.stringify(msg)
     };
-
+    // POST route holds.
     fetch(`http://${SERVER}:${PORT}`, sendRouteOptions)
         .then(jsonResponse => { console.log(jsonResponse) })
         .catch((err) => console.log(err));
@@ -37,27 +37,27 @@ class Hold {
             case (this.state = "off"):
                 this.state = "start";
                 this.colour = "green";
-                console.log(`[NEW STATE]: ${this.holdID} is a ${this.state} hold.`);
+                //console.log(`[NEW STATE]: ${this.holdID} is a ${this.state} hold.`);
                 break;
             case (this.state = "start"):
                 this.state = "route";
                 this.colour = "blue";
-                console.log(`[NEW STATE]: ${this.holdID} is a ${this.state} hold.`);
+                //console.log(`[NEW STATE]: ${this.holdID} is a ${this.state} hold.`);
                 break;
             case (this.state = "route"):
                 this.state = "foot";
                 this.colour = "aqua";
-                console.log(`[NEW STATE]: ${this.holdID} is a ${this.state} hold.`);
+                //console.log(`[NEW STATE]: ${this.holdID} is a ${this.state} hold.`);
                 break;
             case (this.state = "foot"):
                 this.state = "end";
                 this.colour = "red";
-                console.log(`[NEW STATE]: ${this.holdID} is a ${this.state} hold.`);
+                //console.log(`[NEW STATE]: ${this.holdID} is a ${this.state} hold.`);
                 break;
             case (this.state = "end"):
                 this.state = "off";
                 this.colour = "";
-                console.log(`[NEW STATE]: ${this.holdID} is ${this.state}.`);
+                //console.log(`[NEW STATE]: ${this.holdID} is ${this.state}.`);
                 break;
         };
     };
@@ -69,11 +69,19 @@ class Hold {
 };
 
 var Holds = [];
+var HoldsDict = {}
 let initialArray = [];
 
 for (let i = 0; i < buttons.length; i++) {
-    Holds[buttons[i].innerHTML] = new Hold(buttons[i].innerHTML);
+    Holds[i] = new Hold(buttons[i].innerHTML);
 };
+
+for (let i = 0; i < buttons.length; i++) {
+    let label = Holds[i].holdID
+    HoldsDict[label] = Holds[i]
+}
+
+//console.log(HoldsDict)
 
 for (let i = 0; i < buttons.length; i++) {
     initialArray[i] = new Hold(buttons[i].innerHTML, state = "_");
@@ -81,7 +89,7 @@ for (let i = 0; i < buttons.length; i++) {
 
 buttons.map(button => {
     button.addEventListener('click', (e) => {
-        let hold = Holds[e.target.innerHTML];
+        let hold = HoldsDict[e.target.innerHTML];
         hold.changeState();
         button.style.backgroundColor = hold.colour;
         button.style.opacity = 0.5;
@@ -125,21 +133,13 @@ uploadButton.addEventListener('click', (e) => {
 });
 
 function upload() {
-    dbHolds = [];
-    for (let i = 0; i < 42; i++) {
-        hold = Holds[`Hold ${i}`];
-        // state = hold["state"];
-        // dbHolds.push([hold, state]);
-        dbHolds.push(hold);
-    };
-
     options = {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
-            holds: { dbHolds },
+            holds: { Holds },
             details: {
                 routename: document.getElementById("routeform")[0].value,
                 setter: document.getElementById("routeform")[1].value,
@@ -147,8 +147,8 @@ function upload() {
                 attempts: document.getElementById("routeform")[3].value,
             },
             mode: 'no-cors',
-        });
+        })
     };
 
-    toDB = fetch('/db', options);
+    toDB = fetch('/db', options)
 };
