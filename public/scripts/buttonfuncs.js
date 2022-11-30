@@ -150,7 +150,8 @@ function upload() {
         })
     };
 
-    toDB = fetch('/db', options)
+    fetch('/db', options)
+    alert("Route Added!")
 };
 
 
