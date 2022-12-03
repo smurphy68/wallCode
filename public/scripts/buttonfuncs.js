@@ -61,7 +61,7 @@ class Hold {
                 break;
         };
     };
-    
+
     refreshHolds() {
         this.state = "off";
         this.colour = "";
@@ -80,8 +80,6 @@ for (let i = 0; i < buttons.length; i++) {
     let label = Holds[i].holdID
     HoldsDict[label] = Holds[i]
 }
-
-//console.log(HoldsDict)
 
 for (let i = 0; i < buttons.length; i++) {
     initialArray[i] = new Hold(buttons[i].innerHTML, state = "_");
