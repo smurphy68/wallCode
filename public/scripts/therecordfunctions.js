@@ -13,7 +13,7 @@ function genRouteMessage(oldRoute, newRoute) {
     return hold.state !== oldRoute[index].state
   })
   return updates.map((hold) => {
-    return `${hold.holdID} ${hold.state}`
+    return `${hold.holdID.toLowerCase().split(' ').join('')} ${hold.state}`
   }).join(", ")
 }
 
