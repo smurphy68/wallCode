@@ -68,8 +68,8 @@ class Hold {
     };
 };
 
-var Holds = [];
-var HoldsDict = {}
+let Holds = [];
+let HoldsDict = {}
 let initialArray = [];
 
 for (let i = 0; i < buttons.length; i++) {
@@ -85,7 +85,7 @@ for (let i = 0; i < buttons.length; i++) {
     initialArray[i] = new Hold(buttons[i].innerHTML, state = "_");
 };
 
-buttons.map(button => {
+buttons.forEach(button => {
     button.addEventListener('click', (e) => {
         let hold = HoldsDict[e.target.innerHTML];
         hold.changeState();
@@ -152,4 +152,55 @@ function upload() {
     alert("Route Added!")
 };
 
+let currentlySelectedRoute = []
+
+function displayRoute(route) {
+  route.forEach((hold) => {
+    if (!hold.holdID) {
+      return;
+    }
+    const holdElement = document.getElementById(hold.holdID);
+    holdElement.style.backgroundColor = hold.colour;
+    holdElement.style.opacity = 0.5;
+  });
+}
+
+function sendRout() {
+
+}
+
+function getData(search = "") {
+  fetch(`/routes?search=${search}`)
+    .then((response) => {
+      return response.json();
+    })
+    .then((data) => {
+      const tableContainer = document.getElementById("table");
+      data.routes.forEach((routeData) => {
+        const elementContainer = document.createElement("button");
+        const detailsContainer = document.createElement("div");
+        const routeName = document.createElement("h2");
+        const setter = document.createElement("span");
+        const grade = document.createElement("span");
+
+        routeName.innerText = routeData.routename;
+        setter.innerText = routeData.setter;
+        grade.innerText = routeData.grade;
+
+        detailsContainer.appendChild(setter);
+        detailsContainer.appendChild(grade);
+        detailsContainer.className = "d-flex space-between";
+
+        elementContainer.appendChild(routeName);
+        elementContainer.appendChild(detailsContainer);
+        elementContainer.className = "list-item";
+
+        elementContainer.onclick = () => displayRoute(routeData.route);
+
+        tableContainer.appendChild(elementContainer);
+      });
+    });
+}
+
+getData()
 

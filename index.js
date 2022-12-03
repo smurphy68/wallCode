@@ -23,24 +23,25 @@ app.post("/db", (request, response) => {
     const details = request.body.details
 
     database.insert({
-      route: route,
-      routename: details.routename,
-      setter: details.setter,
-      grade: details.grade,
-      attempts: details.attempts
+        route: route,
+        routename: details.routename,
+        setter: details.setter,
+        grade: details.grade,
+        attempts: details.attempts
     },
-    (error, newData) => {
-        if (error) {
-            return response.status(500).json(error)
-        }
+        (error, newData) => {
+            if (error) {
+                return response.status(500).json(error)
+            }
 
-        return response.send('route saved')
-    });
+            return response.send('route saved')
+        });
 })
 
 app.get('/routes', (request, response) => {
     const searchTerm = request.query.search
-    const dbQuery = { ...searchTerm && { routename: searchTerm } }
+    const searchRegex = new RegExp(searchTerm, "i")
+    const dbQuery = { ...searchTerm && { routename: { $regex: searchRegex } } }
     database.find(dbQuery, (error, data) => {
         if (error) {
             return response.status(500).send(error)

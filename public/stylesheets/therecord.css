@@ -1,7 +1,7 @@
 .container {
     min-width: 70%;
     max-width: 800px;
-    margin: 8vh auto 0 auto;
+    margin: 0 auto 0 auto;
     box-shadow: 0px 0px 43px 17px #7d7d95;
     /*background-image: url("C:/Users/smurp/wallCode/BoardWarped.png");*/
     background-position: -110px -450px;
@@ -41,4 +41,8 @@
 
 #table {
     width: 30%;
+}
+
+.text-centre {
+    text-align: center;
 }
