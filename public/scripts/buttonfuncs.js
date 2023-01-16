@@ -1,15 +1,25 @@
-let buttons = Array.from(document.getElementsByClassName('button'));
+// SETUP
 
 // Maximum size of bytes array.
-HEADER = 5000;
+const HEADER = 5000;
 // Pic Server Port.
-PORT = 5050;
+const PORT = 5050;
 // Pico Server Address.
-SERVER = "192.168.1.72";
+const SERVER = "192.168.1.72";
 
+// Containers 
+let buttons = Array.from(document.getElementsByClassName('button'));
+let Holds = [];
+let HoldsDict = {}
+let initialArray = [];
+let currentlySelectedRoute = []
+
+// DISPLAYING THE SELECTED ROUTE ON THE BOARD
+
+// Send the value of msg to the pico server
 function sendRoute(msg) {
-    // define fetch method options for send route function.
-    sendRouteOptions = {
+    // Define fetch method options for send route function.
+    let sendRouteOptions = {
         method: "POST",
         headers: {
             'content-type': 'application/json', 'accept': 'application/json'
@@ -23,54 +33,47 @@ function sendRoute(msg) {
         .catch((err) => console.log(err));
 }
 
+// Define the Hold class
 class Hold {
     // Contructor takes a string HoldID.
     constructor(holdID, colour = "", state = "off") {
+        // Variables to store name, state of hold and colour of hold.
         this.holdID = holdID;
         this.state = state;
         this.colour = colour;
     };
 
-    // Change state method changes colour of CSS box on click.
+    // Change state method toggles colour of target hold element on click --> off, start, route, foot, end.
     changeState() {
         switch (this.state) {
             case (this.state = "off"):
                 this.state = "start";
                 this.colour = "green";
-                //console.log(`[NEW STATE]: ${this.holdID} is a ${this.state} hold.`);
                 break;
             case (this.state = "start"):
                 this.state = "route";
                 this.colour = "blue";
-                //console.log(`[NEW STATE]: ${this.holdID} is a ${this.state} hold.`);
                 break;
             case (this.state = "route"):
                 this.state = "foot";
                 this.colour = "aqua";
-                //console.log(`[NEW STATE]: ${this.holdID} is a ${this.state} hold.`);
                 break;
             case (this.state = "foot"):
                 this.state = "end";
                 this.colour = "red";
-                //console.log(`[NEW STATE]: ${this.holdID} is a ${this.state} hold.`);
                 break;
             case (this.state = "end"):
                 this.state = "off";
                 this.colour = "";
-                //console.log(`[NEW STATE]: ${this.holdID} is ${this.state}.`);
                 break;
         };
     };
-
+    // If the hold is refreshed, reset to default
     refreshHolds() {
         this.state = "off";
         this.colour = "";
     };
 };
-
-let Holds = [];
-let HoldsDict = {}
-let initialArray = [];
 
 for (let i = 0; i < buttons.length; i++) {
     Holds[i] = new Hold(buttons[i].innerHTML);
@@ -95,41 +98,53 @@ buttons.forEach(button => {
 });
 
 let resetButton = document.getElementById("reset");
+// add event listener to target reset button which resets the holds on the client, the holds stored in the arrays and the board.
 resetButton.addEventListener('click', (e) => {
-    console.log("[RESET]: Reset button clicked.");
+    // loop through each hold and reset all hold objects
     for (const [key, value] of Object.entries(Holds)) {
         value.refreshHolds();
-    }
+    };
+    // reset all hold objecs stored in Holds
     for (let i = 0; i < buttons.length; i++) {
         buttons[i].style.backgroundColor = "";
         buttons[i].style.opacity = 1.0;
-    }
+    };
+    // reset all holds stored in the comparison array
     for (const [key, value] of Object.entries(initialArray)) {
         value.refreshHolds();
-    }
+    };
+    // send reset command to the pico-W socket
     sendRoute("reset");
 })
 
 let displayButton = document.getElementById("submit");
+// add event listener to dislay button element which condenses the changes on the board into a string, which is then sent to the pico-W socket.
 displayButton.addEventListener('click', (e) => {
+    // declare message to send
     let message = "";
+    // loop through the current hold states and append those hold, state pairs to a string if they differ from what is currently on the board.
     for (let i = 0; i < Object.values(Holds).length; i++) {
         if (Object.values(Holds)[i].state !== Object.values(initialArray)[i].state) {
             message = message += `${Object.values(Holds)[i].holdID.toLowerCase().replace(/\s/g, '')} ${Object.values(Holds)[i].state}, `;
             Object.values(initialArray)[i].state = Object.values(Holds)[i].state;
         };
     };
+    // trim the trailing " ," characters
     message = message.substring(0, message.length - 2);
+    // send the route to the pico-W socket
     sendRoute(message);
 });
 
+// ADDING CURRENT ROUTE TO THE DATABASE
+
 let uploadButton = document.getElementById("upload");
+// uploadButton with add the 
 uploadButton.addEventListener('click', (e) => {
     e.preventDefault();
-    console.log("[UPLOAD] Route posted to Database.");
     upload();
 });
 
+// upload currently set route to the database
 function upload() {
     options = {
         method: "POST",
@@ -147,13 +162,13 @@ function upload() {
             mode: 'no-cors',
         })
     };
-
+    // Send options to node server for processing
     fetch('/db', options)
+    // alert user!
     alert("Route Added!")
 };
 
-let currentlySelectedRoute = []
-
+// Function to show preview of route in browser
 function displayRoute(route) {
   route.forEach((hold) => {
     if (!hold.holdID) {
@@ -165,10 +180,7 @@ function displayRoute(route) {
   });
 }
 
-function sendRout() {
-
-}
-
+// 
 function getData(search = "") {
   fetch(`/routes?search=${search}`)
     .then((response) => {
@@ -202,5 +214,6 @@ function getData(search = "") {
     });
 }
 
+// First call of getData() startup, with default search term "" to bring up all avaliable routes.
 getData()
 

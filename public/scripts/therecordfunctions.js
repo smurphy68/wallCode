@@ -1,5 +1,8 @@
+// SETUP
+// disables selection of another route whilst route is being fetched to avoid errors.
 let disableButton = false
 
+// Declare the current array displayed on the API, for altering later on
 let currentlySelectedRoute = Array(49).fill("").map((_item, index) => {
   return {
     holdID: `Hold ${index + 1}`,
@@ -8,6 +11,9 @@ let currentlySelectedRoute = Array(49).fill("").map((_item, index) => {
   };
 });
 
+// "THE RECORD" FUNCTIONS
+
+// Generate the route message to send to the board, by comparing each hold in the current and new arrays.
 function genRouteMessage(oldRoute, newRoute) {
   const updates = newRoute.filter((hold, index) => {
     return hold.state !== oldRoute[index].state
@@ -17,9 +23,9 @@ function genRouteMessage(oldRoute, newRoute) {
   }).join(", ")
 }
 
+// Display the currently selected route on the API
 function displayRoute(route) {
   if (disableButton) return
-  console.log("YOU DID PASS")
   route.forEach((hold) => {
     if (!hold.holdID) {
       return;
@@ -28,14 +34,17 @@ function displayRoute(route) {
     holdElement.style.backgroundColor = hold.colour;
     holdElement.style.opacity = 0.5;
   });
-
   const message = genRouteMessage(currentlySelectedRoute, route)
-  sendRoute(message)
+
+  // This would normally send the route to the board but causes a timeout error without being connected to the wall
+  // sendRoute(message)
+
+  // replace the currently selected route that is being displayed.
   currentlySelectedRoute = route
 }
 
+// function to send the route to the board, only one route can be sent at a time to the board.
 function sendRoute(msg) {
-  // define fetch method options for send route function.
   sendRouteOptions = {
     method: "POST",
     headers: {
@@ -45,63 +54,55 @@ function sendRoute(msg) {
     mode: 'no-cors',
     body: JSON.stringify(msg)
   };
-  disableButton = true
-  // POST route holds.
+  // whilst disable button is true, another request cannot be made, returned to false once either process is complete.
+  disableButton = true;
   fetch('http://192.168.1.72:5050', sendRouteOptions)
     .then(jsonResponse => { 
-      console.log(jsonResponse) 
-      disableButton = false
+      disableButton = false;
     })
     .catch((err) => {
-      console.log(err)
-      disableButton = false
+      console.log(err);
+      disableButton = false;
     });
 }
 
-// Reset board to all off as page loads.
-sendRoute("reset")
+// Reset board to all "off" as page loads.
+// sendRoute("reset")
 
+// Retrieve the available routes from the database. The first call automatically populates the window with a list of all of the routes
 function getData(search = "") {
   const tableContainer = document.getElementById("listofroutes");
-  tableContainer.innerHTML = ""
+  tableContainer.innerHTML = "";
   fetch(`/routes?search=${search}`)
     .then((response) => {
       return response.json();
     })
     .then((data) => {
-      
-      data.routes.forEach((routeData) => {
+        data.routes.forEach((routeData) => {
         const elementContainer = document.createElement("button");
         const detailsContainer = document.createElement("div");
         const routeName = document.createElement("h2");
         const setter = document.createElement("span");
         const grade = document.createElement("span");
-
         routeName.innerText = routeData.routename;
         setter.innerText = routeData.setter;
         grade.innerText = routeData.grade;
-
         detailsContainer.appendChild(setter);
         detailsContainer.appendChild(grade);
         detailsContainer.className = "d-flex space-between";
-
         elementContainer.appendChild(routeName);
         elementContainer.appendChild(detailsContainer);
         elementContainer.className = "list-item";
-
         elementContainer.onclick = () => displayRoute(routeData.route);
-
         tableContainer.appendChild(elementContainer);
       });
     });
-}
+};
 
-//Test call to get array in browser
-getData();
-
-const searchButton = document.getElementById("byu")
+// add event listener and call getData() using the search term
+const searchButton = document.getElementById("searchforroute")
 .addEventListener("submit", (e) => {
   e.preventDefault();
-  const searchTerm = document.getElementById("searchterm").value
-  getData(searchTerm)
+  const searchTerm = document.getElementById("searchterm").value;
+  getData(searchTerm);
 })

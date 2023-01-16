@@ -17,11 +17,11 @@ app.use(express.json({
     limit: "1mb"
 }))
 
-// handles post request from the setting page. Getting it into the data base works
+// handles request from the setting page
 app.post("/db", (request, response) => {
     const route = request.body.holds.Holds
     const details = request.body.details
-
+// insert posted route into the database file, with callback function to the client if there is an error
     database.insert({
         route: route,
         routename: details.routename,
@@ -38,6 +38,7 @@ app.post("/db", (request, response) => {
         });
 })
 
+// search database for a route using a search term from the client and return the response
 app.get('/routes', (request, response) => {
     const searchTerm = request.query.search
     const searchRegex = new RegExp(searchTerm, "i")
