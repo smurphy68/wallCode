@@ -208,8 +208,6 @@ function getData(search = "") {
         elementContainer.className = "list-item";
 
         elementContainer.onclick = () => displayRoute(routeData.route);
-
-        tableContainer.appendChild(elementContainer);
       });
     });
 }

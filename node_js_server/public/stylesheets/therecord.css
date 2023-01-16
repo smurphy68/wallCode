@@ -1,11 +1,10 @@
 .container {
     min-width: 70%;
-    max-width: 800px;
+    max-width: 700px;
     margin: 0 auto 0 auto;
     box-shadow: 0px 0px 43px 17px #7d7d95;
-    /*background-image: url("C:/Users/smurp/wallCode/BoardWarped.png");*/
-    background-position: -110px -450px;
     background-size: 100px 1800px;
+    font-family: "Helvetica";
 }
 
 .buttons {
@@ -13,6 +12,7 @@
     border-bottom: 1px solid #999;
     border-left: 1px solid #999;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    background-position: center;
 }
 
 .button {
@@ -20,11 +20,16 @@
     line-height: 100px;
     text-align: center;
     font-size: 25px;
-    cursor:pointer;
+    cursor: not-allowed;
 }
 
 .d-flex {
     display: flex;
+    max-width: 1000px;
+}
+
+.d-block {
+    display: block;
 }
 
 .space-between {
@@ -39,10 +44,20 @@
     margin: 8px;
 }
 
+.text-centre {
+    text-align: center;
+}
+
 #table {
     width: 30%;
 }
 
-.text-centre {
-    text-align: center;
+#whole {
+    font-family: "Helvetica";
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment: fixed;
+    max-width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
 }

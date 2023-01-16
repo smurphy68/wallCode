@@ -106,3 +106,5 @@ const searchButton = document.getElementById("searchforroute")
   const searchTerm = document.getElementById("searchterm").value;
   getData(searchTerm);
 })
+
+getData()
