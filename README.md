@@ -12,3 +12,5 @@ This project has four elements:
   2. The pico-w script controlling the other micro-controllers (micropython)
   3. The node server connecting the pico-w and the client (node.js JavaScript)
   4. The client interface (Javascript, HMTL, CSS)
+
+The next step in the project is to add functionality to the LED controllers, so they can recieve a new script through the web-socket instead of having to take the wall down and upload the script to each individual controller.
