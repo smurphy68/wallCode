@@ -5,7 +5,7 @@ Each hold on the wall has an accompanying LED, which can light up in four states
 
 The leds are controlled by a series of raspberry pi picos, which are inturn all controlled by one raspberry pi pico-w (wifi enabled).
 
-The user will intersact with the board via a web page that has a grid of holds, representing the current climbing wall. Each of the elements will toggle between each of the states. When the route is submitted, the user has the option of saving the route with some meta-data. The submission of the route will send a stream of data to the pico-w server which distributes commands to each of the LED picos. The relevent LEDs will then display the submitted state.
+The user will interact with the board via a web page that has a grid of holds, representing the current climbing wall. Each of the elements will toggle between each of the states. When the route is submitted, the user has the option of saving the route with some meta-data. The submission of the route will send a stream of data to the pico-w server which distributes commands to each of the LED picos. The relevent LEDs will then display the submitted state.
 
 This project has four elements:
   1. The pico script controlling the LEDs (micropython)
