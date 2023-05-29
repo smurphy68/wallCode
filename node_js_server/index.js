@@ -4,21 +4,29 @@ const Datastore = require('nedb');
 // Server
 const express = require("express");
 
+const app = express();
+const port = 5000;
+
+// server init
+try {
+    app.listen(port, () => console.log(`Listening on port: http://localhost:${port}`))
+    app.use(express.static('public'));
+    app.use(express.json({
+        limit: "1mb"
+    }))
+
+    console.log("Server loaded with no errors.")
+} catch (e) {
+    console.log(e);
+}
+
 // Database init
 const database = new Datastore("the_record.db");
 database.loadDatabase();
 
-// server init
-const app = express();
-const port = 5000;
-app.listen(port, () => console.log(`Listening on port ${port}`))
-app.use(express.static('public'))
-app.use(express.json({
-    limit: "1mb"
-}))
-
 // handles request from the setting page
 app.post("/db", (request, response) => {
+    console.log("request recieved");
     const route = request.body.holds.Holds
     const details = request.body.details
 // insert posted route into the database file, with callback function to the client if there is an error
@@ -40,6 +48,7 @@ app.post("/db", (request, response) => {
 
 // search database for a route using a search term from the client and return the response
 app.get('/routes', (request, response) => {
+    console.log("request recieved");
     const searchTerm = request.query.search
     const searchRegex = new RegExp(searchTerm, "i")
     const dbQuery = { ...searchTerm && { routename: { $regex: searchRegex } } }
