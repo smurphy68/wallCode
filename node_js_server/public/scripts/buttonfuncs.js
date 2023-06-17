@@ -2,10 +2,10 @@
 
 // Maximum size of bytes array.
 const HEADER = 5000;
-// Pic Server Port.
-const PORT = 5050;
+// Pico Server Port.
+const PORT = 5000;
 // Pico Server Address.
-const SERVER = "192.168.1.72";
+const SERVER = "192.168.1.209";
 
 // Containers 
 let buttons = Array.from(document.getElementsByClassName('button'));
